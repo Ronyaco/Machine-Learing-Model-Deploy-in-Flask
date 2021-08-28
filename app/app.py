@@ -19,13 +19,27 @@ def hello():
         end_date = request.form['end_date']
         start_date  and end_date
         path = 'static/prediction.svg'
+
+        # Creating the data model
+        df = pd.read_csv('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\routes.csv')
+        df['date'] = pd.to_datetime(df.date)
+        df["year"] = pd.to_numeric(df["year"], downcast="integer")
+        df["rev_passengers"] = pd.to_numeric(df["rev_passengers"], downcast="float")
+        df = df.loc[(df['year'] <= 2019) ]
+        data_model =df[['date', 'rev_passengers']]
+        data_model = data_model.reset_index(drop=True)
+        data_model = data_model.groupby('date').sum()
+        #sampling, getting index out column date
+        data_model = data_model.resample(rule='M').sum()
+
+
+
         model = pickle.load(open('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\data\\model.pkl','rb'))
-        make_picture('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\model_creation\\data\\data_model.csv',model,start_date,end_date,path)
+        make_picture(data_model,model,start_date,end_date,path)
         return render_template('index.html', href=path)
+data_model = "D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\data_model.csv"
 
-
-def make_picture(training_data_filename,model,date_start,date_end,output_file):
-  data_model = pd.read_csv(training_data_filename)
+def make_picture(data_model,model,date_start,date_end,output_file):
   pred = model.predict(start=date_start, end=date_end)
   fig = px.line( data_frame = data_model, x = data_model.index, y=data_model.rev_passengers  , 
               title = "Sydney - Melbourne Revenue", labels = {'x':'Month','y':'Revenue(AUD)'})
