@@ -1,8 +1,5 @@
 import pandas as pd
-from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-import plotly.express as px
-import plotly.graph_objects as go
 import pickle
 
 
