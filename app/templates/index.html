@@ -2,7 +2,6 @@
 <html class="no-js" lang="en">
 
 <head>
-    <link rel="shortcut icon" href="">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Time Series Model</title>
@@ -332,10 +331,10 @@
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <div class="breadcrumbs-area clearfix">
-                            <h4 class="page-title pull-left">Dashboard</h4>
+                            <h4 class="page-title pull-left">Revenue Model Prediction</h4>
                             <ul class="breadcrumbs pull-left">
                                 <li><a href="index.html">Home</a></li>
-                                <li><span>Line Chart</span></li>
+                                <li><span>Holt Winters</span></li>
                             </ul>
                         </div>
                     </div>
@@ -372,19 +371,19 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="header-title">Input dates to predict </h4>
-                                <form action="{{ url_for('predict')}}" method="POST">
+                                <form method="POST" id="dates_form">
                                     <div class="row align-items-center">
                                         <div class="col-sm-3 my-1">
                                             <label for="example-month-input" class="col-form-label">Start Date</label>
-                                            <input class="form-control" type="month"  name="start_date" value="2015-01-31">
+                                            <input class="form-control" type="month" id="start_date" >
                                         </div>
                                         <div class="col-sm-3 my-1">
                                             <label for="example-month-input" class="col-form-label">End Date</label>
-                                            <input class="form-control" type="month" value="2016-01-31" name="end_date"  >
+                                            <input class="form-control" type="month" id="end_date" >
                                         </div>
                                         <div class="col-sm-3 my-1">
                                             <label for="example-month-input" class="form-row align-items-center">&#8205</label>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                            <button type="submit" class="btn btn-primary" id=prediction_button>Submit</button>
                                         </div> 
                                     
                                     </div>

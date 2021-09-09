@@ -1,62 +1,75 @@
-from flask import Flask, render_template , request
-from numpy import dtype
-from numpy.core import records
+from flask import Flask, render_template , request, jsonify
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import uuid
 import pickle
-from pandas.io.json import json_normalize
-import json
 
 
 app = Flask(__name__)
 
+model = pickle.load(open('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\data\\model.pkl','rb'))
 
 
 @app.route('/predict',methods=['POST'])
 def predict():
 
-    ##start_date = request.form.get('start_date')
-    ##end_date = request.form.get('end_date')
-    ##start_date  and end_date
-    ##random_str = uuid.uuid4().hex
-    ##path = 'static/'+random_str+'.svg'
+    json_data = request.json
+    start_date_year_month = json_data["start_date"]
+    end_date_year_month = json_data["end_date"]
 
-    # Creating the data model
+    if start_date_year_month and end_date_year_month:
+        start_date= get_date(start_date_year_month)
+        end_date= get_date(end_date_year_month)
+        pred = graph_prediction(start_date, end_date)
+        data_model = graph_data()
+        full_data = join_datasets(data_model,pred)
+        full_data.index = pd.to_datetime(full_data.index, format = '%Y/%m/%d').strftime('%m-%Y')
+        full_data_json= full_data.to_json(orient="table")
+        print(full_data_json)
+        return jsonify(full_data_json)
+
+    else:
+        data_model = graph_data()
+        data_model.index = pd.to_datetime(data_model.index, format = '%Y/%m/%d').strftime('%m-%Y')
+        data_model_json = data_model.to_json(orient="table")
+        return jsonify(data_model_json)
+
+@app.route('/', methods=['GET', 'POST'])
+def home ():
+    return render_template('index.html', href='static/base_pic.svg')
+def join_datasets(df1,df2):
+    df = df1.append(df2)
+    df = df.groupby('date').sum()
+    return df.resample(rule='M').sum()
+
+def get_process_data():
     df = pd.read_csv('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\routes.csv')
     df['date'] = pd.to_datetime(df.date)
     df["year"] = pd.to_numeric(df["year"], downcast="integer")
     df["rev_passengers"] = pd.to_numeric(df["rev_passengers"], downcast="float")
     df = df.loc[(df['year'] <= 2019) ]
-    data_model =df[['date', 'rev_passengers']]
-    data_model = data_model.reset_index(drop=True)
-    data_model = data_model.groupby('date').sum()
-    #sampling, getting index out column date
-    data_model = data_model.resample(rule='M').sum()
-    ##make_picture(data_model,model,start_date,end_date,path)
-    model = pickle.load(open('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\data\\model.pkl','rb'))
-    pred = model.predict(start='2014-08-31', end='2022-10-31')
-    pred = pred.astype(int)
-    pred.index = pd.to_datetime(pred.index, format = '%Y/%m/%d').strftime('%m-%Y')
-    result = pred.to_json(orient="table")
-    parsed = json.loads(result)
-    return json.dumps(parsed, indent=4)
-     
-      
-    ##return render_template('index.html', href=path)
+    df = df[['date', 'rev_passengers']]
+    df = df.reset_index(drop=True)
+    df = df.groupby('date').sum()
+    return df.resample(rule='M').sum()
 
-@app.route('/', methods=['GET', 'POST'])
-def home ():
-    return render_template('index.html', href='static/base_pic.svg')
+def graph_prediction(start_date,end_date):
+    pred = model.predict(start=start_date, end=end_date)
+    pred = pd.DataFrame(pred)
+    pred.columns =['prediction']
+    pred.index.name = 'date'
+    pred['values'] = 0
+    pred['prediction'] = pred['prediction'].astype('int64')
+    return pred
 
+def graph_data():
+    data_model = get_process_data()
+    dict = {'date': 'date',
+    'rev_passengers': 'values'}
+    data_model.rename(columns=dict, inplace=True)
+    data_model['prediction'] = 0
+    return data_model
 
-def make_picture(data_model,model,date_start,date_end,output_file):
-    #data_model = pd.read_csv(data_model)  
-    pred = model.predict(start=date_start, end=date_end)
-    fig = px.line( data_frame = data_model, x = data_model.index, y=data_model.rev_passengers,
-                title = "Sydney - Melbourne Revenue", labels = {'x':'Month','y':'Revenue(AUD)'})
-    fig.add_trace(go.Scatter(x=pred.index, y = pred , name = 'Holt - Winters Prediction'))
-    fig.write_image(output_file, width = 800 , engine = 'kaleido' )
-    fig.show()
-  # Papi no esta generando el segundo graph
+def get_date(date_input):
+  date_input = date_input+'-01'
+  date_output= pd.Period(date_input,freq='M').end_time.date() 
+  date_output = date_output.strftime("%Y-%m-%d")
+  return date_output
