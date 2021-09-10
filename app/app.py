@@ -23,7 +23,6 @@ def predict():
         full_data = join_datasets(data_model,pred)
         full_data.index = pd.to_datetime(full_data.index, format = '%Y/%m/%d').strftime('%m-%Y')
         full_data_json= full_data.to_json(orient="table")
-        print(full_data_json)
         return jsonify(full_data_json)
 
     else:

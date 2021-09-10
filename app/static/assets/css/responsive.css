@@ -117,7 +117,7 @@
 
     /* sidebar */
     .sidebar-menu {
-        width: 365px;
+        width: 0px;
     }
     .nav-btn {
         position: fixed;
@@ -153,8 +153,7 @@
     .main-content-inner {
         padding: 0 15px 50px;
     }
-    .page-container,
-    .sbar_collapsed.page-container {
+    .page-container {
         padding-left: 0;
     }
     /* sidebar collapsed end */
@@ -172,46 +171,12 @@
     .mt-md-30 {
         margin-top: 30px;
     }
-    /* sidebar */
-    .sidebar-menu {
-        width: 306px;
-    }
-    .nav-btn {
-        position: fixed;
-        z-index: 99;
-        left: 304px;
-        background: #303641;
-        padding: 14px;
-        top: 0;
-        margin: 0;
-    }
-    .nav-btn span {
-        background: #fffbfb;
-    }
-    .sbar_collapsed .sidebar-menu {
-        left: -90%;
-    }
-    .sbar_collapsed .nav-btn {
-        position: initial;
-        background: none;
-        padding: 0;
-        margin: 10px 30px 0 0;
-    }
-    .sbar_collapsed .nav-btn span {
-        background: #b3aaaa;
-    }
-    .sbar_collapsed .logo a span {
-        display: block;
-    }
-    .minisidebar.main-menu {
-        margin-right: 0;
-    }
+ 
     /* main content */
     .main-content-inner {
         padding: 0 15px 50px;
     }
-    .page-container,
-    .sbar_collapsed.page-container {
+    .page-container {
         padding-left: 0;
     }
     /* fact area */
@@ -326,8 +291,7 @@
     .main-content-inner {
         padding: 0 15px 50px;
     }
-    .page-container,
-    .sbar_collapsed.page-container {
+    .page-container {
         padding-left: 0;
     }
     /* main content */
@@ -466,8 +430,7 @@
     .main-content-inner {
         padding: 0 15px 35px;
     }
-    .page-container,
-    .sbar_collapsed.page-container {
+    .page-container {
         padding-left: 0;
     }
     /* main content */
@@ -581,8 +544,7 @@
     .main-content-inner {
         padding: 0 15px 50px;
     }
-    .page-container,
-    .sbar_collapsed.page-container {
+    .page-container {
         padding-left: 0;
     }
     .card-body {
