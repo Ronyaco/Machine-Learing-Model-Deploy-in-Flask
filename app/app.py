@@ -5,7 +5,7 @@ import pickle
 
 app = Flask(__name__)
 
-model = pickle.load(open('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\data\\model.pkl','rb'))
+model = pickle.load(open('..\\model_creation\\data\\model.pkl','rb'))
 
 
 @app.route('/predict',methods=['POST'])
@@ -40,7 +40,7 @@ def join_datasets(df1,df2):
     return df.resample(rule='M').sum()
 
 def get_process_data():
-    df = pd.read_csv('D:\\Data Science\\Portfolio\\Machine Learing Model Deploy in Flask\\model_creation\\routes.csv')
+    df = pd.read_csv('..\\model_creation\\routes.csv')
     df['date'] = pd.to_datetime(df.date)
     df["year"] = pd.to_numeric(df["year"], downcast="integer")
     df["rev_passengers"] = pd.to_numeric(df["rev_passengers"], downcast="float")
@@ -72,3 +72,8 @@ def get_date(date_input):
   date_output= pd.Period(date_input,freq='M').end_time.date() 
   date_output = date_output.strftime("%Y-%m-%d")
   return date_output
+
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run()
