@@ -5,7 +5,7 @@ import pickle
 
 app = Flask(__name__)
 
-model = pickle.load(open('..\\model_creation\\data\\model.pkl','rb'))
+model = pickle.load(open('/model_creation/data/model.pkl','rb'))
 
 
 @app.route('/predict',methods=['POST'])
@@ -40,7 +40,7 @@ def join_datasets(df1,df2):
     return df.resample(rule='M').sum()
 
 def get_process_data():
-    df = pd.read_csv('..\\model_creation\\routes.csv')
+    df = pd.read_csv('/model_creation/routes.csv')
     df['date'] = pd.to_datetime(df.date)
     df["year"] = pd.to_numeric(df["year"], downcast="integer")
     df["rev_passengers"] = pd.to_numeric(df["rev_passengers"], downcast="float")
