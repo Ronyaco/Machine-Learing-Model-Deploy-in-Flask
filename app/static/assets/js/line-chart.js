@@ -81,7 +81,7 @@ function getData() {
   return $.ajax({
     crossDomain: true,
     type: "POST",
-    url: "https://holtwinters.herokuapp.com/prediction",
+    url: "https://holtwinters.herokuapp.com/predict",
     data: JSON.stringify(request),
     contentType: "application/json",
     dataType: "json",
